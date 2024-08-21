@@ -2,10 +2,23 @@ import { ApiDeleteUser, ApiGetUser, ApiSignIn, ApiSignUp, ApiUpdateUser } from "
 import { ApiGetCars, ApiNewCar } from "../@types/Car";
 import { ApiGetCarModels, ApiNewCarModel } from "../@types/CarModel";
 import { ApiGetCustomers, ApiNewCustomer } from "../@types/Customer";
-import { ApiGetDashboard, ApiGetTransaction, ApiGetTransactions, ApiNewTransaction, ApiUpdateTransaction, TransactionStatus } from "../@types/Transaction";
-import { formatDate } from "../utils/formatDate";
+import { ApiGetRentals, ApiNewRental } from "../@types/Rental";
+import { ApiGetTransaction, ApiGetTransactions, ApiNewTransaction, ApiUpdateTransaction, TransactionStatus } from "../@types/Transaction";
 import { api } from "./api"
 
+export const getRentals = async () => {
+    return await api<ApiGetRentals>({
+        endpoint: 'api-servico/locacao'
+    })
+}
+
+export const newRental = async (start_date: string, end_date: string, daily_value: number, customerId: string, carId: string) => {
+    return await api<ApiNewRental>({
+        endpoint: 'api-servico/locacao',
+        method: 'POST',
+        data: { customer: customerId, car: carId, start_date, end_date, daily_value}
+    });
+}
 
 export const getCarModels = async () => {
     return await api<ApiGetCarModels>({
@@ -129,21 +142,21 @@ export const newCustomer = async (name: string) => {
     }
 
     // Dashboard
-    export const getDashboard = async (month: string, year: string) => {
-        const response = await api<ApiGetDashboard>({
-            endpoint: 'dashboard'
-        });
-        let balance = 0;
-        let pending_transactions = response.data?.pending_transactions ?? 0;
-        let completed_transactions = response.data?.completed_transactions ?? 0;
+    // export const getDashboard = async (month: string, year: string) => {
+    //     const response = await api<ApiGetDashboard>({
+    //         endpoint: 'dashboard'
+    //     });
+    //     let balance = 0;
+    //     let pending_transactions = response.data?.pending_transactions ?? 0;
+    //     let completed_transactions = response.data?.completed_transactions ?? 0;
 
-        if (response.data) {
-            response.data.transactions.map(transaction => {
-                const date = formatDate(transaction.created_at).split('/');
-                if (date[1] == month && date[2] == year) {
-                    balance += transaction.amount;
-                }
-            })
-        }
-        return { balance, pending_transactions, completed_transactions }
-    }
+    //     if (response.data) {
+    //         response.data.transactions.map(transaction => {
+    //             const date = formatDate(transaction.created_at).split('/');
+    //             if (date[1] == month && date[2] == year) {
+    //                 balance += transaction.amount;
+    //             }
+    //         })
+    //     }
+    //     return { balance, pending_transactions, completed_transactions }
+    // }

@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "../components/Layout";
-import Home from "../pages/Home";
 import { NewTransaction } from "../pages/Transaction/New";
 import { EditTransaction } from "../pages/Transaction/Edit";
 import { Transactions } from "../pages/Transaction/Transactions";
@@ -11,6 +10,8 @@ import { NewCarModel } from "../pages/CarModel/New";
 import { NewCar } from "../pages/Car/New";
 import { Customers } from "../pages/Customer/Customers";
 import { NewCustomer } from "../pages/Customer/New";
+import { Rentals } from "../pages/Rental/Rentals";
+import { NewRental } from "../pages/Rental/New";
 
 export const MainRoutes = () => {
     return (
@@ -18,7 +19,7 @@ export const MainRoutes = () => {
             <Route element={<Layout />}>
                 <Route
                     index
-                    element={<Home />}
+                    element={<CarModels/>}
                 />
                 <Route path="/carro-modelos">
                     <Route
@@ -48,6 +49,16 @@ export const MainRoutes = () => {
                     <Route
                         path="novo"
                         element={<NewCustomer />}
+                    />
+                </Route>
+                <Route path="/locacoes">
+                    <Route
+                        index
+                        element={<Rentals />}
+                    />
+                    <Route
+                        path="novo"
+                        element={<NewRental />}
                     />
                 </Route>
                 <Route path="/transacoes">

@@ -1,6 +1,5 @@
-import { useTheme } from "styled-components"
 import { ActionBtn, Actions, Container, DeleteIcon, EditIcon, Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "./styles"
-import { Car, CarTable } from "../../@types/Car"
+import { CarTable } from "../../@types/Car"
 
 type Props = {
     data: CarTable[],
@@ -9,7 +8,6 @@ type Props = {
 }
 
 export const CarsTable = ({ data, onEdit, onDelete }: Props) => {
-    const theme = useTheme();
 
     return (
         <Container>

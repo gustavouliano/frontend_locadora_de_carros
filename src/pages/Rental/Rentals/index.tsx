@@ -56,7 +56,7 @@ export const Rentals = () => {
             const url = window.URL.createObjectURL(new Blob([request.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'alugueis.txt');
+            link.setAttribute('download', 'relatorio.txt');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

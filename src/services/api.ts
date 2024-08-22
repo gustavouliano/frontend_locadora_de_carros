@@ -1,15 +1,37 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, ResponseType } from 'axios';
+import { getBusinessApiUri } from './requests';
 
 type Props = {
     endpoint: string,
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE',
     data?: object,
-    withAuth?: boolean 
+    withAuth?: boolean,
+    baseUrl?: string,
+    responseType?: ResponseType | undefined
 }
 
-export const api = async<TypeResponse>({ endpoint, method = 'GET', data, withAuth = false }: Props) => {
+const SESSION_STORAGE_KEY = import.meta.env.VITE_SESSION_STORAGE_API_URI_KEY;
+
+const getApiUri = async () => {
+    if (!sessionStorage.getItem(SESSION_STORAGE_KEY)) {
+        const request = await getBusinessApiUri();
+        if (request.data) {
+            sessionStorage.setItem(SESSION_STORAGE_KEY, request.data.address);
+            return request.data.address;
+        }
+    }
+    return sessionStorage.getItem(SESSION_STORAGE_KEY) || '';
+}
+
+export const api = async<TypeResponse>({ endpoint, method = 'GET', data, withAuth = false, baseUrl = '', responseType}: Props) => {
+    let uriStorage = '';
+    if (!baseUrl) {
+        uriStorage = await getApiUri();
+    }
+    baseUrl = baseUrl ? baseUrl : `http://${uriStorage}`;
     const instance = axios.create({
-        baseURL: import.meta.env.VITE_API_BASE_URL
+        baseURL: baseUrl,
+        responseType: responseType
     });
     if (withAuth) {
         instance.defaults.headers.common['Authorization'] = localStorage.getItem(import.meta.env.VITE_LOCAL_STORAGE_AUTH_KEY)

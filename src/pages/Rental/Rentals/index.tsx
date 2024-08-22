@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { getRentals } from "../../../services/requests";
+import { getRentals, getRentalsInfo } from "../../../services/requests";
 import { Body, Container, Empty, EmptyIcon, EmptyLabel, Header, HeaderInfo, HeaderSubtitle, HeaderTitle, Loading } from "./styles";
 import Button from "../../../components/Button";
 import Alert from "../../../components/Alert";
@@ -49,9 +49,24 @@ export const Rentals = () => {
         }
     }
 
+    const onClickDownload = async () => {
+        const request = await getRentalsInfo();
+        console.log(request);
+        if (request.data){
+            const url = window.URL.createObjectURL(new Blob([request.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'alugueis.txt');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+
     useEffect(() => {
         handleGetCars();
     }, [])
+
 
 
     return (
@@ -62,6 +77,7 @@ export const Rentals = () => {
                     <HeaderSubtitle>Consulte, adicione e gerencie todos as locações</HeaderSubtitle>
                 </HeaderInfo>
                 <Button onClick={onClickNew} borderRadius="md" width="120px">Adicionar nova locação</Button>
+                <Button onClick={onClickDownload} borderRadius="md" width="120px">Baixar relatório</Button>
             </Header>
 
             <Alert
